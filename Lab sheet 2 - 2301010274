@@ -1,0 +1,194 @@
+ANS 1 : include <iostream>
+#include <vector>
+#include <string>
+using namespace std;
+
+// Class for Two-Dimensional Array operations
+class TwoDimensionalArray {
+private:
+    vector<vector<int>> matrix;
+
+public:
+    // Constructor to initialize a matrix with given rows and columns
+    TwoDimensionalArray(int rows, int cols) : matrix(rows, vector<int>(cols, 0)) {}
+
+    // Method to insert a row at the end
+    void insertRow(const vector<int>& row) {
+        matrix.push_back(row);
+    }
+
+    // Method to insert a column at the end
+    void insertColumn(const vector<int>& col) {
+        for (int i = 0; i < col.size(); i++) {
+            if (i < matrix.size()) {
+                matrix[i].push_back(col[i]);
+            }
+        }
+    }
+
+    // Method to delete a row by index
+    void deleteRow(int rowIndex) {
+        if (rowIndex >= 0 && rowIndex < matrix.size()) {
+            matrix.erase(matrix.begin() + rowIndex);
+        }
+    }
+
+    // Method to traverse and display the matrix
+    void traverse() const {
+        for (const auto& row : matrix) {
+            for (int val : row) {
+                cout << val << " ";
+            }
+            cout << endl;
+        }
+    }
+
+    // Method to transpose the matrix
+    vector<vector<int>> transposeMatrix() const {
+        int rows = matrix.size();
+        int cols = matrix[0].size();
+        vector<vector<int>> transposed(cols, vector<int>(rows));
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                transposed[j][i] = matrix[i][j];
+            }
+        }
+        return transposed;
+    }
+};
+
+
+ANS 2 : Advanced String Operations:
+i.	Implement string pattern matching algorithms (e.g., Knuth-Morris-Pratt algorithm).
+Ans: 
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class StringAlgorithms {
+public:
+    // Knuth-Morris-Pratt Pattern Matching
+    int KMP(string text, string pattern) {
+        vector<int> lps = computeLPSArray(pattern);  // Compute the LPS (Longest Prefix Suffix) array
+        int i = 0, j = 0;
+
+        while (i < text.size()) {
+            if (pattern[j] == text[i]) {
+                j++;
+                i++;
+            }
+            if (j == pattern.size()) {
+                return i - j;  // Match found, return the starting index
+            } else if (i < text.size() && pattern[j] != text[i]) {
+                if (j != 0)
+                    j = lps[j - 1];  // Move the pattern index back based on the LPS array
+                else
+                    i++;  // Move the text index forward
+            }
+        }
+        return -1;  // No match found
+    }
+
+private:
+    // Compute the LPS array for the pattern
+    vector<int> computeLPSArray(string pattern) {
+        int len = 0;
+        vector<int> lps(pattern.size(), 0);
+        int i = 1;
+
+        while (i < pattern.size()) {
+            if (pattern[i] == pattern[len]) {
+                len++;
+                lps[i] = len;
+                i++;
+            } else {
+                if (len != 0) {
+                    len = lps[len - 1];
+                } else {
+                    lps[i] = 0;
+                    i++;
+                }
+            }
+        }
+        return lps;
+    }
+};
+
+int main() {
+    StringAlgorithms sa;
+    
+    string text = "abxabcabcaby";
+    string pattern = "abcaby";
+    int index = sa.KMP(text, pattern);
+    
+    if (index != -1)
+        cout << "Pattern found at index: " << index << endl;
+    else
+        cout << "Pattern not found!" << endl;
+
+    return 0;
+}
+
+Output:
+ 
+
+ii.	Write a program to perform string compression using Run Length Encoding (RLE).
+Ans:
+#include <iostream>
+#include <string>
+using namespace std;
+
+string runLengthEncoding(string input) {
+    string output = "";
+    
+    for (int i = 0; i < input.length(); i++) {
+        int count = 1;
+        while (i + 1 < input.length() && input[i] == input[i + 1]) {
+            i++;
+            count++;
+        }
+        output += to_string(count) + input[i];  // Append the count followed by the character
+    }
+    
+    return output;
+}
+
+int main() {
+    string input = "aaabbbcccaaa";
+    string rle = runLengthEncoding(input);
+    cout << "Run Length Encoding: " << rle << endl;
+
+    return 0;
+}
+Ans 3: #include <iostream>
+#include <vector>
+#include <string>
+using namespace std;
+
+// Class for Two-Dimensional Array operations
+class TwoDimensionalArray {
+private:
+    vector<vector<int>> matrix;
+
+public:
+// Constructor to initialize a matrix with given rows and columns
+    TwoDimensionalArray(int rows, int cols) : matrix(rows, vector<int>(cols, 0)) {}
+
+    // Method to insert a row at the end
+    void insertRow(const vector<int>& row) {
+        matrix.push_back(row);
+    }
+ // Test String Algorithms
+    StringAlgorithms stringAlgo;
+    string text = "abxabcabcaby";
+    string pattern = "abcaby";
+    int index = stringAlgo.KMPSearch(text, pattern);
+    cout << "\nPattern found at index (KMP): " << index << endl;
+
+    string str = "aaabbbcccaaa";
+    string encodedStr = stringAlgo.runLengthEncoding(str);
+    cout << "Run Length Encoding of \"" << str << "\": " << encodedStr << endl;
+
+    return 0;
+}
